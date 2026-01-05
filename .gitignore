@@ -45,3 +45,9 @@ output/
 
 # Local config files
 config/
+
+# Test reports
+test-report*.html
+spending_report.css
+spending_report.js
+spending_data.js

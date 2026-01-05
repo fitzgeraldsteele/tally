@@ -178,6 +178,16 @@
                 </button>
             </div>
 
+            <!-- Collapse/Expand All Controls -->
+            <div class="collapse-controls">
+                <button @click="collapseAllSections" class="collapse-btn" data-testid="collapse-all">
+                    Collapse All
+                </button>
+                <button @click="expandAllSections" class="collapse-btn" data-testid="expand-all">
+                    Expand All
+                </button>
+            </div>
+
             <!-- Section View -->
             <template v-if="currentView === 'section' && hasSections">
                 <merchant-section
