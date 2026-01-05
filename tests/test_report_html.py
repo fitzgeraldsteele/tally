@@ -241,6 +241,38 @@ class TestUINavigation:
         colors = [badge.evaluate("el => getComputedStyle(el).color") for badge in david_badges]
         assert all(c == colors[0] for c in colors), "Same tag should have consistent color"
 
+    def test_collapse_all_button_exists(self, page: Page, report_path):
+        """Collapse All and Expand All buttons are present in the UI."""
+        page.goto(f"file://{report_path}")
+        expect(page.get_by_test_id("collapse-all")).to_be_visible()
+        expect(page.get_by_test_id("expand-all")).to_be_visible()
+
+    def test_collapse_expand_all_functionality(self, page: Page, report_path):
+        """Collapse All and Expand All buttons work correctly."""
+        page.goto(f"file://{report_path}")
+
+        # Get all section contents
+        section_contents = page.locator(".category-section .section-content").all()
+        assert len(section_contents) > 0, "Should have at least one section"
+
+        # All sections should be expanded by default
+        for content in section_contents:
+            expect(content).not_to_have_class("collapsed")
+
+        # Click "Collapse All"
+        page.get_by_test_id("collapse-all").click()
+
+        # All sections should now be collapsed
+        for content in section_contents:
+            expect(content).to_have_class("collapsed")
+
+        # Click "Expand All"
+        page.get_by_test_id("expand-all").click()
+
+        # All sections should be expanded again
+        for content in section_contents:
+            expect(content).not_to_have_class("collapsed")
+
 
 # =============================================================================
 # Category 2: Calculation/Data Accuracy Tests
