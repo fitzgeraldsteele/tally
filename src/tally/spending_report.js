@@ -1477,6 +1477,39 @@ createApp({
             }
         }
 
+        // Collapse all visible sections in current view
+        function collapseAllSections() {
+            const visibleKeys = getVisibleSectionKeys();
+            visibleKeys.forEach(key => collapsedSections.add(key));
+        }
+
+        // Expand all visible sections in current view
+        function expandAllSections() {
+            const visibleKeys = getVisibleSectionKeys();
+            visibleKeys.forEach(key => collapsedSections.delete(key));
+        }
+
+        // Get all section keys for the current view
+        function getVisibleSectionKeys() {
+            const keys = [];
+            if (currentView.value === 'section') {
+                // Section view: 'sec:' + sectionId
+                const sections = spendingData.value.sections || {};
+                for (const sectionId of Object.keys(sections)) {
+                    keys.push('sec:' + sectionId);
+                }
+            } else if (currentView.value === 'category') {
+                // Category view (both merchant and subcategory modes): 'cat:' + categoryName
+                const view = groupByMode.value === 'subcategory' 
+                    ? subcategoryGroupedView.value 
+                    : positiveCategoryView.value;
+                for (const categoryName of Object.keys(view)) {
+                    keys.push('cat:' + categoryName);
+                }
+            }
+            return keys;
+        }
+
         // Sort merchants by configurable column and direction (for object-based sections)
         function sortMerchantEntries(merchants, column, dir) {
             return Object.entries(merchants || {})
@@ -2033,7 +2066,7 @@ createApp({
             groupedTransactions, expandedTransactions,
             // Methods
             addFilter, removeFilter, toggleFilterMode, clearFilters, addMonthFilter,
-            toggleExpand, toggleSection, toggleSort, sortedMerchants,
+            toggleExpand, toggleSection, collapseAllSections, expandAllSections, toggleSort, sortedMerchants,
             formatCurrency, formatDate, formatMonthLabel, formatPct, filterTypeChar, getLocationClass,
             highlightDescription,
             onSearchInput, onSearchKeydown, selectAutocompleteItem,
